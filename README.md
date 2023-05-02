@@ -26,6 +26,7 @@ This project aims to use foraminiferal global occurrence data for understanding 
 **Base scripts in R** 
 - `data partition.R`: Data partitioning script to categorize the original binned data from Triton based on 250 ky bin resolution. 
 - `network properties.R`: Calculate network properties at the node level using 'bipartite' R library, but we will only adapt Degree, Species specificity Index and Paired Different Index for our purpose.
-- `null models.R`: Null models for distribution in each time bin based on 'econullnetr' R package.
+- `foram_stat_sigmoids.Rmd`: Functional fits to the values of specialization and richness. See data in `R_baseScripts\data_sigmoid`
 - `functional diversity.R`: Functional and species Shannon doversity caclulation.
-- `linear models.R`: base code for linear models used in the work.
+
+Main data is from Fenton, I. S., Woodhouse, A., Aze, T., Lazarus, D., Renaudie, J., Dunhill, A. M., ... & Saupe, E. E. (2021). Triton, a new species-level database of Cenozoic planktonic foraminiferal occurrences. Scientific Data, 8(1), 160.
