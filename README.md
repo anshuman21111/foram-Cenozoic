@@ -1,4 +1,4 @@
-# Late Cenozoic cooling restructured global marine plankton communities #
+# Biogeographic responses in marine plankton functional groups to Cenozoic climatic and environmental changes #
 **Team members:**  Anshuman Swain<sup>1,2,3,4,* </sup>, Adam Woodhouse<sup>5,* </sup>, William F. Fagan<sup>4</sup>, Andrew J. Fraass<sup>6</sup>, and Christopher M. Lowery<sup>5</sup>
 
 
