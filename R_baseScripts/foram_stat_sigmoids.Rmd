@@ -1,0 +1,264 @@
+---
+title: "foram_stat"
+output: html_document
+date: "2023-03-11"
+---
+
+Qs
+0,1:First 10 Ma for average morphogroup richness and average MSI (linear logistic model and see if there is a difference with the first 5 ma as one category and the next 5 as another)
+2: Separate out the high southern paleolatitudes, 50-65 degrees south (first 3 time bins, 10 cells) - south (blue) vs everything north (control for data numbers) - one tailed t-test
+3: ESI and EPDI increase globally following the initiation of the Paleocene-Eocene Thermal Maximum (PETM, ~56 Ma), which continues until the termination of the Early Eocene Climatic Optimum (EECO, ~53.3-49.1 Ma) - t - test (three part - pre, during and post) - 62-56 Ma, 56-50 Ma, 50-44 Ma
+4:Repeat the K-Pg southern hemisphere analysis for here (56-50 Ma) - 50-65 degrees south vs everything else (repeat for richness and ESI/EPDI)
+5:Show a decrease in average morphogroup richness and average MSI across the Eocene-Oligocene boundary (linear model - logistic) and then test for how gradual the shift is (strength of logistic regression) (taken 34 Mya and plus minus 5 Mya so 39-29)
+6:Repeat point 4 analysis for here (34-23 Ma) - 50-65 degrees south vs everything else (repeat for richness and MSI/MPDI)
+7:Repeat 5 for oligocene-Miocene boundary (19 Ma as center) for MSI
+QQ: Explore similarly for ~25Ma
+
+```{r}
+Q1=read.csv("data/Q1.csv")
+
+y0=Q1$Mrich_1
+y=scales::rescale(y0, to=c(0,1))
+x=Q1$time
+plot(y ~ x)
+fit <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = data.frame(x, y))
+
+summary(fit)
+
+sigmoid = function(params, x) {
+  params[1] / (1 + exp(-params[3] * (x - params[2])))
+}
+
+params=coef(fit)
+y2 <- sigmoid(params,x)
+plot(y2,type="l", ylim=range(y))
+points(y, pch=16)
+abline(v=params[2], lty=2, col="red")
+```
+```{r}
+y0=Q1$MSI_1
+y=1-scales::rescale(y0, to=c(0,1))
+x=Q1$time
+plot(y ~ x)
+fit <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = data.frame(x, y))
+
+summary(fit)
+
+sigmoid = function(params, x) {
+  params[1] / (1 + exp(-params[3] * (x - params[2])))
+}
+
+params=coef(fit)
+    
+y2 <- sigmoid(params,x)
+plot(y2,type="l", ylim=rev(range(y)))
+points(y, pch=16)
+abline(v=params[2], lty=2, col="red")
+
+#nagelkerke(model, null=null.model)
+```
+
+
+
+```{r}
+Q5=read.csv("data/Q5.csv")
+
+y0=Q5$Mrich_1
+y=scales::rescale(y0, to=c(0,1))
+x=Q5$time
+plot(y ~ x)
+fit <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = data.frame(x, y))
+
+summary(fit)
+
+sigmoid = function(params, x) {
+  params[1] / (1 + exp(-params[3] * (x - params[2])))
+}
+
+params=coef(fit)
+    
+y2 <- sigmoid(params,x)
+plot(y2,type="l", ylim=range(y))
+points(y, pch=16)
+abline(v=params[2]+6, lty=2, col="red")
+```
+```{r}
+Q5=read.csv("data/Q5.csv")
+
+y0=Q5$MSI_1
+y=scales::rescale(y0, to=c(0,1))
+x=Q5$time
+plot(y ~ x)
+fit <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = data.frame(x, y))
+
+summary(fit)
+
+sigmoid = function(params, x) {
+  params[1] / (1 + exp(-params[3] * (x - params[2])))
+}
+
+params=coef(fit)
+    
+y2 <- sigmoid(params,x)
+plot(y2,type="l", ylim=range(y))
+points(y, pch=16)
+abline(v=params[2]+6, lty=2, col="red")
+```
+```{r}
+Q7=read.csv("data/66Ma/Qs/Q7.csv")
+
+y0=Q7$Mrich_1
+y=scales::rescale(y0, to=c(0,1))
+x=Q7$time
+plot(y ~ x)
+fit <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = data.frame(x, y))
+
+summary(fit)
+
+sigmoid = function(params, x) {
+  params[1] / (1 + exp(-params[3] * (x - params[2])))
+}
+
+params=coef(fit)
+    
+y2 <- sigmoid(params,x)
+plot(y2,type="l", ylim=range(y))
+points(y, pch=16)
+abline(v=params[2]+6, lty=2, col="red")
+```
+
+```{r}
+Q7=read.csv("data/Q7.csv")
+
+y0=1-Q7$MSI_1
+y=scales::rescale(y0, to=c(0,1))
+x=Q7$time
+plot(y ~ x)
+fit <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = data.frame(x, y))
+
+summary(fit)
+
+sigmoid = function(params, x) {
+  params[1] / (1 + exp(-params[3] * (x - params[2])))
+}
+
+params=coef(fit)
+    
+y2 <- sigmoid(params,x)
+plot(y2,type="l", ylim = rev(range(y)))
+points(y, pch=16)
+abline(v=6+params[2], lty=2, col="red")
+```
+
+```{r}
+Q0=read.csv("data/Q0.csv")
+x=Q0$Time
+y1=Q0$M_rich
+y2=1-Q0$MSI
+par(mar = c(5, 4, 4, 4) + 0.3)              # Additional space for second y-axis
+plot(x, y1, pch = 16, col = 1, xlim = rev(range(x)), xlab="Time (Ma)", ylab="Avg. Morphotype richness")              # Create first plot
+par(new = TRUE)                             # Add new plot
+plot(x, y2, pch = 17,               # Create second plot without axes
+     axes = FALSE, xlab = "", ylab = "", xlim = rev(range(x)), col="indianred")
+axis(side = 4, at = pretty(range(y2)))      # Add second axis
+mtext("1-Avg(MSI)", side = 4, line = 3,col="indianred")             # Add second axis label
+```
+
+
+```{r}
+Q0=read.csv("data/Q0.csv")
+x=Q0$Time
+y1=Q0$E_rich
+y2=1-Q0$ESI
+par(mar = c(5, 4, 4, 4) + 0.3)              # Additional space for second y-axis
+plot(x, y1, pch = 16, col = 1, xlim = rev(range(x)), xlab="Time (Ma)", ylab="Avg. Ecotype richness", col.lab = 1)              # Create first plot
+par(new = TRUE)                             # Add new plot
+plot(x, y2, pch = 17,               # Create second plot without axes
+     axes = FALSE, xlab = "", ylab = "", xlim = rev(range(x)), col="goldenrod2")
+axis(side = 4, at = pretty(range(y2)))      # Add second axis
+mtext("1-Avg(ESI)", side = 4, line = 3, col="goldenrod2")             # Add second axis label
+```
+
+
+```{r}
+#data_wide; Ecodiv
+lm_mr_msi=NULL
+for (i in 1:(length(roundage)-1)) {
+  ZZ=c(summary(lm(MSI[,i]~Mrich[,i]))$coefficients[2,1],summary(lm(MSI[,i]~Mrich[,i]))$coefficients[2,4])
+  lm_mr_msi=rbind(lm_mr_msi,ZZ)
+}
+
+#rownames(lm_mr_msi)= as.character(roundage)
+colnames(lm_mr_msi)= c("coeff", "pval")
+
+lm_mr_msi=as.data.frame(cbind(sort(roundage),lm_mr_msi))
+
+plot(lm_mr_msi$coeff, pch=16, col="indianred", xlab="Time (Ma)", ylab="Linear model coefficient for latitudinal corr.", xlim = rev(range(x)))
+
+```
+
+
+```{r}
+#data_wide; Ecodiv
+lm_er_esi=NULL
+for (i in 1:(length(roundage)-1)) {
+  ZZ=c(summary(lm(ESI[,i]~Erich[,i]))$coefficients[2,1],summary(lm(ESI[,i]~Erich[,i]))$coefficients[2,4])
+  lm_er_esi=rbind(lm_er_esi,ZZ)
+}
+
+#rownames(lm_mr_msi)= as.character(roundage)
+colnames(lm_er_esi)= c("coeff", "pval")
+
+lm_er_esi=as.data.frame(cbind(sort(roundage),lm_er_esi))
+
+plot(lm_er_esi$coeff, pch=16, col="goldenrod2", xlab="Time (Ma)", ylab="Linear model coefficient for latitudinal corr.", xlim = rev(range(x)))
+
+```
+
+```{r}
+QQ=read.csv("data/QQ.csv")
+
+y0=QQ$MSI_1
+y=scales::rescale(y0, to=c(0,1))
+x=QQ$time
+plot(y ~ x)
+fit <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = data.frame(x, y))
+
+summary(fit)
+
+sigmoid = function(params, x) {
+  params[1] / (1 + exp(-params[3] * (x - params[2])))
+}
+
+params=coef(fit)
+    
+y2 <- sigmoid(params,x)
+plot(y2,type="l", ylim=range(y))
+points(y, pch=16)
+abline(v=params[2], lty=2, col="red")
+```
+
+
+```{r}
+QQ=read.csv("data/QQ.csv")
+
+y0=QQ$Mrich_1
+y=scales::rescale(y0, to=c(0,1))
+x=QQ$time
+plot(y ~ x)
+fit <- nls(y ~ SSlogis(x, Asym, xmid, scal), data = data.frame(x, y))
+
+summary(fit)
+
+sigmoid = function(params, x) {
+  params[1] / (1 + exp(-params[3] * (x - params[2])))
+}
+
+params=coef(fit)
+    
+y2 <- sigmoid(params,x)
+plot(y2,type="l", ylim=range(y))
+points(y, pch=16)
+abline(v=params[2], lty=2, col="red")
+```
+
